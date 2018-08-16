@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace code_contributors
 {
@@ -29,15 +30,15 @@ namespace code_contributors
 
                 if (nameStartIdx < line.Length && nameEndIdx > nameStartIdx)
                 {
-                    string name = line.Substring(nameStartIdx, nameEndIdx - nameStartIdx);
+                    string name = line.Substring(nameStartIdx, nameEndIdx - nameStartIdx).TrimEnd();
 
-                    if (!contributorCounts.ContainsKey(name))
-                    {
-                        contributorCounts[name] = 1;
-                    }
-                    else
+                    try
                     {
                         ++contributorCounts[name];
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        contributorCounts[name] = 1;
                     }
                 }
 
@@ -45,7 +46,7 @@ namespace code_contributors
             }
 
             long totalCount = 0;
-            foreach (KeyValuePair<string, long> pair in contributorCounts)
+            foreach (KeyValuePair<string, long> pair in contributorCounts.OrderBy(p => p.Key))
             {
                 Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
                 totalCount += pair.Value;
