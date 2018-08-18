@@ -90,13 +90,25 @@ namespace code_contributors
 
             contributorCounts = CombineAliases(contributorCounts, aliases);
 
+            int maxNameLen = "Total".Length;
+            int maxCountLen = 0;
             ulong totalCount = 0;
-            foreach (KeyValuePair<string, ulong> pair in contributorCounts.OrderBy(p => p.Key))
+            foreach (KeyValuePair<string, ulong> pair in contributorCounts)
             {
-                Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+                maxNameLen = Math.Max(maxNameLen, pair.Key.Length);
+                maxCountLen = Math.Max(maxCountLen, pair.Value.ToString().Length);
                 totalCount += pair.Value;
             }
-            Console.WriteLine("Total: {0}", totalCount);
+            maxCountLen = Math.Max(maxCountLen, totalCount.ToString().Length);
+
+            foreach (KeyValuePair<string, ulong> pair in contributorCounts.OrderBy(p => p.Key))
+            {
+                string name = pair.Key.PadRight(maxNameLen);
+                string count = pair.Value.ToString().PadLeft(maxCountLen);
+                double percentage = pair.Value / (double)totalCount;
+                Console.WriteLine("{0} {1} {2,6:0.0%}", name, count, percentage);
+            }
+            Console.WriteLine("{0} {1} 100.0%", "Total".PadRight(maxNameLen), totalCount.ToString().PadLeft(maxCountLen));
         }
     }
 }
