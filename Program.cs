@@ -48,9 +48,47 @@ namespace code_contributors
             return contributorCounts;
         }
 
+        static Dictionary<string, ulong> CombineAliases(Dictionary<string, ulong> contributorCounts, Dictionary<string, List<string>> aliases)
+        {
+            foreach (KeyValuePair<string, List<string>> pair in aliases)
+            {
+                ulong count;
+                try
+                {
+                    count = contributorCounts[pair.Key];
+                }
+                catch (KeyNotFoundException)
+                {
+                    count = 0;
+                }
+
+                foreach (string alias in pair.Value)
+                {
+                    try
+                    {
+                        count += contributorCounts[alias];
+                        contributorCounts.Remove(alias);
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                    }
+                }
+
+                contributorCounts[pair.Key] = count;
+            }
+
+            return contributorCounts;
+        }
+
         static void Main(string[] args)
         {
             Dictionary<string, ulong> contributorCounts = ReadFiles();
+
+            Dictionary<string, List<string>> aliases = new Dictionary<string, List<string>>
+            {
+            };
+
+            contributorCounts = CombineAliases(contributorCounts, aliases);
 
             ulong totalCount = 0;
             foreach (KeyValuePair<string, ulong> pair in contributorCounts.OrderBy(p => p.Key))
