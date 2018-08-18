@@ -6,9 +6,9 @@ namespace code_contributors
 {
     class Program
     {
-        static void Main(string[] args)
+        static Dictionary<string, ulong> ReadFiles()
         {
-            Dictionary<string, long> contributorCounts = new Dictionary<string, long>();
+            Dictionary<string, ulong> contributorCounts = new Dictionary<string, ulong>();
 
             string line = Console.ReadLine();
             while (line != null)
@@ -45,8 +45,15 @@ namespace code_contributors
                 line = Console.ReadLine();
             }
 
-            long totalCount = 0;
-            foreach (KeyValuePair<string, long> pair in contributorCounts.OrderBy(p => p.Key))
+            return contributorCounts;
+        }
+
+        static void Main(string[] args)
+        {
+            Dictionary<string, ulong> contributorCounts = ReadFiles();
+
+            ulong totalCount = 0;
+            foreach (KeyValuePair<string, ulong> pair in contributorCounts.OrderBy(p => p.Key))
             {
                 Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
                 totalCount += pair.Value;
