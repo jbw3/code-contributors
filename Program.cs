@@ -101,7 +101,7 @@ namespace code_contributors
             }
             maxCountLen = Math.Max(maxCountLen, totalCount.ToString().Length);
 
-            foreach (KeyValuePair<string, ulong> pair in contributorCounts.OrderBy(p => p.Key))
+            foreach (KeyValuePair<string, ulong> pair in contributorCounts.OrderBy(p => p.Value).Reverse())
             {
                 string name = pair.Key.PadRight(maxNameLen);
                 string count = pair.Value.ToString().PadLeft(maxCountLen);
